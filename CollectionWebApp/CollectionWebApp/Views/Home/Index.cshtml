@@ -1,8 +1,73 @@
-﻿@{
+﻿@model CollectionWebApp.ViewModels.HomeIndexModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    @if (Model.Items.Count > 0)
+    {
+        <h2>Last @Model.Items.Count collection items</h2>
+        
+        <div id="carouselExampleIndicators" class="carousel carousel-dark slide">
+            <div class="carousel-inner">
+                @foreach(var item in Model.Items)
+                {
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center">
+                            <div class="card" style="width: 18rem;">
+                                <img src="@item.UserCollection.ImageUrl" class="card-img-top" alt="collection-image">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text">
+                                        <p>
+                                            Collection: <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@item.UserCollection.Id">@item.UserCollection.Name</a>
+                                        </p>
+                                        <!--Tags!!!!!!!-->
+                                        @if (item.Tags.Count > 0)
+                                        {
+                                            <p>Tags: 
+                                                @foreach(var tag in item.Tags)
+                                                {
+                                                    <a href="#">@tag.Name</a>       
+                                                }
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>No tags</p>
+                                        }
+                                    </p>
+                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Inspect" asp-route-id="@item.Id">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
+    
+
 </div>
+
+@section Scripts
+{
+    <script>
+    $('document').ready(function() {
+        $('.carousel-item').first().addClass('active');
+        var myCarousel = document.querySelector('#carouselExampleIndicators');
+        var carousel = new bootstrap.Carousel(myCarousel);
+    });
+    </script>
+}
