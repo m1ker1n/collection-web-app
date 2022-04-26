@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 using CollectionWebApp.Models;
 using CollectionWebApp.ViewModels;
@@ -17,7 +20,7 @@ namespace CollectionWebApp.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            //if authorized return to Account page
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Account");
             return View();
         }
 
@@ -25,10 +28,10 @@ namespace CollectionWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            //if authorized return to account page
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Account");
             User? user = ValidateLoginModel(model);
             if (!ModelState.IsValid) return View(model);
-            //login 
+            await LoginUserAsync(user!); 
             return RedirectToAction("Index", "Account");
         }
 
@@ -38,6 +41,22 @@ namespace CollectionWebApp.Controllers
             if (user == null) ModelState.AddModelError("", "No such user.");
             if (user != null && user.Password != model.Password) ModelState.AddModelError("", "Wrong password.");
             return user;
+        }
+
+        private async Task LoginUserAsync(User user)
+        {
+            await AuthenticateAsync(user.Email, user.Role.Name);
+        }
+
+        private async Task AuthenticateAsync(string email, string roleName)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, roleName)
+            };
+            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
     }
 }
