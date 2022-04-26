@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 using CollectionWebApp.Models;
 using CollectionWebApp.ViewModels;
@@ -99,6 +100,23 @@ namespace CollectionWebApp.Controllers
             await db.Users.AddAsync(user);
             await db.SaveChangesAsync();
             return user;
+        }
+
+        [Authorize]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await LogoutUserAsync();
+            return RedirectToAction("Login", "Authorization");
+        }
+
+        private async Task LogoutUserAsync()
+        {
+            await DeauthenticateAsync();
+        }
+
+        private async Task DeauthenticateAsync()
+        {
+            await HttpContext.SignOutAsync();
         }
     }
 }
