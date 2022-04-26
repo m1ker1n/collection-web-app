@@ -16,6 +16,7 @@ namespace CollectionWebApp.Models
 
         public readonly int UserRoleId = 1;
         public readonly int AdminRoleId = 2;
+        public readonly string ImagePlaceholder = "files/image-placeholder.png";
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -37,6 +38,7 @@ namespace CollectionWebApp.Models
             InitRoles(modelBuilder);
             InitUsers(modelBuilder);
             InitThemes(modelBuilder);
+            //InitTest(modelBuilder);
         }
 
         private void InitRoles(ModelBuilder modelBuilder)
@@ -73,6 +75,48 @@ namespace CollectionWebApp.Models
                 });
         }
         #endregion
+
+        private void InitTest(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserCollection>()
+                .HasData(new UserCollection[]
+                {
+                    new UserCollection { Id = 1, Name = "First", Description = "Description 1", ThemeId = 1, UserId = 1},
+                    new UserCollection { Id = 2, Name = "Second", Description = "Description 2", ThemeId = 2, UserId = 1}
+                });
+
+            modelBuilder.Entity<Item>()
+                .HasData(new Item[]
+                {
+                    new Item { Id = 1, Name = "Item 1", UserCollectionId = 1},
+                    new Item { Id = 2, Name = "Item 2", UserCollectionId = 1},
+                    new Item { Id = 3, Name = "Item 3", UserCollectionId = 1},
+                    new Item { Id = 4, Name = "Item 4", UserCollectionId = 2},
+                    new Item { Id = 5, Name = "Item 5", UserCollectionId = 2}
+                });
+
+            modelBuilder.Entity<Tag>()
+                .HasData(new Tag[]
+                {
+                    new Tag { Id = 1, Name = "Tag 1"},
+                    new Tag { Id = 2, Name = "Tag 2"},
+                    new Tag { Id = 3, Name = "Tag 3"},
+                    new Tag { Id = 4, Name = "Tag 4"}
+                });
+
+            modelBuilder.Entity<TagItem>()
+                .HasData(new TagItem[]
+                {
+                    new TagItem { TagId = 1, ItemId = 1},
+                    new TagItem { TagId = 2, ItemId = 1},
+                    new TagItem { TagId = 3, ItemId = 1},
+                    new TagItem { TagId = 4, ItemId = 1},
+
+                    new TagItem { TagId = 1, ItemId = 2},
+                    new TagItem { TagId = 2, ItemId = 3},
+                    new TagItem { TagId = 3, ItemId = 4}
+                });
+        }
 
         #region [Configuring entities]
         private void ConfigureEntities(ModelBuilder modelBuilder)
@@ -128,6 +172,10 @@ namespace CollectionWebApp.Models
             modelBuilder.Entity<UserCollection>()
                 .Property(u => u.Created)
                 .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<UserCollection>()
+                .Property(u => u.ImageUrl)
+                .HasDefaultValue(ImagePlaceholder);
         }
         #endregion
 
