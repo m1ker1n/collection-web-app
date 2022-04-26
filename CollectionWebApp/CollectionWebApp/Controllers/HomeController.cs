@@ -12,7 +12,9 @@ namespace CollectionWebApp.Controllers
 
         private AppDbContext db;
 
-        private const int NumOfObjectsToShow = 10;
+        private const int ItemsToShow = 10;
+        private const int CollectionsToShow = 10;
+        private const int TagsToShow = 25;
 
         public HomeController(ILogger<HomeController> logger, AppDbContext db)
         {
@@ -28,12 +30,14 @@ namespace CollectionWebApp.Controllers
 
         private HomeIndexModel CreateHomeIndexModel()
         {
-            var items = GetLastCreatedItems(NumOfObjectsToShow);
-            var collections = GetMostNumerousCollections(NumOfObjectsToShow);
+            var items = GetLastCreatedItems(ItemsToShow);
+            var collections = GetMostNumerousCollections(CollectionsToShow);
+            var tags = GetMostUsableTags(TagsToShow);
             HomeIndexModel model = new HomeIndexModel()
             {
                 Items = items.ToList(),
-                Collections = collections.ToList()
+                Collections = collections.ToList(),
+                Tags = tags.ToList()
             };
             return model;
         }
@@ -50,6 +54,13 @@ namespace CollectionWebApp.Controllers
             var orderedCollections = db.UserCollections.OrderByDescending(c => c.Items.Count);
             var items = (orderedCollections.Count() > count) ? orderedCollections.SkipLast(orderedCollections.Count() - count) : orderedCollections;
             return items;
+        }
+
+        private IQueryable<Tag> GetMostUsableTags(int count)
+        {
+            var orderedTags = db.Tags.OrderByDescending(t => t.Items.Count);
+            var tags = (orderedTags.Count() > count) ? orderedTags.SkipLast(orderedTags.Count() - count) : orderedTags;
+            return tags;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

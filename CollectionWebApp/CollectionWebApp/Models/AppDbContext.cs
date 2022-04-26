@@ -16,7 +16,7 @@ namespace CollectionWebApp.Models
 
         public readonly int UserRoleId = 1;
         public readonly int AdminRoleId = 2;
-        public readonly string ImagePlaceholder = "Files/image-placeholder.png";
+        public readonly string ImagePlaceholder = "files/image-placeholder.png";
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

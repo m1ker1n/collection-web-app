@@ -93,6 +93,23 @@
     {
         <h2>There is no collections</h2>
     }
+    <br />
+
+    <!--Tag cloud-->
+    @if (Model.Tags.Count > 0)
+    {
+        <h2>The most common tags</h2>
+        <div class="container" id="tagcloud">
+            @foreach(var tag in Model.Tags)
+            {
+                <a href="#" rel="@tag.Id">@tag.Name</a>
+            }
+        </div>
+    }
+    else
+    {
+        <h2>There is no tags</h2>
+    }
 
 </div>
 
@@ -105,4 +122,16 @@
         var carousel = new bootstrap.Carousel(myCarousel);
     });
     </script>
+
+    <!--Tag cloud-->
+    <script src="/js/jquery.tagcloud.js"></script>
+    <script>
+    $('document').ready(function(){
+        $("#tagcloud a").tagcloud({
+            size: {start: 12, end: 36, unit: "px"},
+            color: {start: '#3498DB', end: '#46CFB0'}
+        });
+    });  
+    </script>
+    
 }

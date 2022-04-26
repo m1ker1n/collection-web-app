@@ -7,5 +7,7 @@ namespace CollectionWebApp.ViewModels
         public ICollection<Item> Items { get; set; } = null!;
 
         public ICollection<UserCollection> Collections { get; set; } = null!;
+
+        public ICollection<Tag> Tags { get; set; } = null!;
     }
 }
