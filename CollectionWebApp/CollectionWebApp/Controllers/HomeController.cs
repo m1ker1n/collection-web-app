@@ -12,6 +12,8 @@ namespace CollectionWebApp.Controllers
 
         private AppDbContext db;
 
+        private const int NumOfObjectsToShow = 10;
+
         public HomeController(ILogger<HomeController> logger, AppDbContext db)
         {
             _logger = logger;
@@ -20,12 +22,34 @@ namespace CollectionWebApp.Controllers
 
         public IActionResult Index()
         {
-            var items = (db.Items.Count() > 10) ? db.Items.OrderByDescending(i => i.Created).SkipLast(db.Items.Count() - 10) : db.Items;
+            var model = CreateHomeIndexModel();
+            return View(model);
+        }
+
+        private HomeIndexModel CreateHomeIndexModel()
+        {
+            var items = GetLastCreatedItems(NumOfObjectsToShow);
+            var collections = GetMostNumerousCollections(NumOfObjectsToShow);
             HomeIndexModel model = new HomeIndexModel()
             {
-                Items = items.ToList()
+                Items = items.ToList(),
+                Collections = collections.ToList()
             };
-            return View(model);
+            return model;
+        }
+
+        private IQueryable<Item> GetLastCreatedItems(int count)
+        {
+            var orderedItems = db.Items.OrderByDescending(i => i.Created);
+            var items = (orderedItems.Count() > count) ? orderedItems.SkipLast(orderedItems.Count() - count) : orderedItems;
+            return items;
+        }
+
+        private IQueryable<UserCollection> GetMostNumerousCollections(int count)
+        {
+            var orderedCollections = db.UserCollections.OrderByDescending(c => c.Items.Count);
+            var items = (orderedCollections.Count() > count) ? orderedCollections.SkipLast(orderedCollections.Count() - count) : orderedCollections;
+            return items;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
