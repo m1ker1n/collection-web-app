@@ -1,0 +1,81 @@
+﻿@model CollectionWebApp.ViewModels.AccountModel
+
+@{
+    ViewData["Title"] = "Account Page";
+}
+
+<div class="text-center">
+    <h1>@ViewData["Title"]</h1>
+    <br />
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#nav-account" type="button" role="tab" aria-controls="nav-account" aria-selected="true">Account</button>
+            <button class="nav-link" id="nav-collection-tab" data-bs-toggle="tab" data-bs-target="#nav-collection" type="button" role="tab" aria-controls="nav-collection" aria-selected="false">Collections</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-account" role="tabpanel" aria-labelledby="nav-account-tab">
+            <div class="card text-center">
+                <div class="card-header">
+                    User profile
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Name: @Model.User.Name</h5>
+                    <p>Email: @Model.User.Email</p>
+                    <p>Role: @Model.User.Role.Name</p>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <p>Password: @Model.User.Password</p>
+                    }
+                </div>
+                <div class="card-footer text-muted">
+                    Created: @Model.User.Created
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-collection" role="tabpanel" aria-labelledby="nav-collection-tab">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var collection in Model.User.UserCollections)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@collection.ImageUrl" alt="collection image">
+                                </td>
+                                <td>@collection.Name</td>
+                                <td>@collection.Description</td>
+                                <td>
+                                    <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@collection.Id">Inspect</a>
+                                    @if(Model.ChangeAllowed)
+                                    {
+                                        <a asp-controller="Collection" asp-action="Edit" asp-route-id="@collection.Id">Edit</a>
+                                        <a asp-controller="Collection" asp-action="Delete" asp-route-id="@collection.Id">Delete</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <tfoot>
+                            <td colspan="4">
+                                <a asp-controller="Collection" asp-action="Create" asp-route-userId="@Model.User.Id">Create</a>
+                            </td>
+                        </tfoot> 
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
