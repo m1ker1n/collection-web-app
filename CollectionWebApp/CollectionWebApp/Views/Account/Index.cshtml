@@ -35,7 +35,46 @@
             </div>
         </div>
         <div class="tab-pane fade" id="nav-collection" role="tabpanel" aria-labelledby="nav-collection-tab">
-            Collections tab
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var collection in Model.User.UserCollections)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@collection.ImageUrl" alt="collection image">
+                                </td>
+                                <td>@collection.Name</td>
+                                <td>@collection.Description</td>
+                                <td>
+                                    <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@collection.Id">Inspect</a>
+                                    @if(Model.ChangeAllowed)
+                                    {
+                                        <a asp-controller="Collection" asp-action="Edit" asp-route-id="@collection.Id">Edit</a>
+                                        <a asp-controller="Collection" asp-action="Delete" asp-route-id="@collection.Id">Delete</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <tfoot>
+                            <td colspan="4">
+                                <a asp-controller="Collection" asp-action="Create" asp-route-userId="@Model.User.Id">Create</a>
+                            </td>
+                        </tfoot> 
+                    }
+                </table>
+            </div>
         </div>
     </div>
 
