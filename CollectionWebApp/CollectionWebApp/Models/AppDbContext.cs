@@ -11,18 +11,20 @@ namespace CollectionWebApp.Models
         public DbSet<Item> Items { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<Field> Fields { get; set; } = null!;
+        public DbSet<FieldItem> FieldItems { get; set; } = null!;
         public DbSet<Like> Likes { get; set; } = null!;
         public DbSet<Commentary> Commentaries { get; set; } = null!;
 
         public readonly int UserRoleId = 1;
         public readonly int AdminRoleId = 2;
-        public readonly string ImagePlaceholder = "files/image-placeholder.png";
+        public readonly string ImagePlaceholder = "https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png";
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
             Database.EnsureDeleted();
             Database.EnsureCreated();
+            //TestAfterModelCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -116,6 +118,33 @@ namespace CollectionWebApp.Models
                     new TagItem { TagId = 2, ItemId = 3},
                     new TagItem { TagId = 3, ItemId = 4}
                 });
+
+            modelBuilder.Entity<Field>()
+                .HasData(new Field[]
+                {
+                    new Field { Id = 1, Name = "Field1", UserCollectionId = 1, Type = ValueType.StringType },
+                    new Field { Id = 2, Name = "Field2", UserCollectionId = 1, Type = ValueType.NumberType },
+                    new Field { Id = 3, Name = "Field3", UserCollectionId = 1, Type = ValueType.BoolType }
+                });
+        }
+
+        private void TestAfterModelCreated()
+        {
+            var fi = new FieldItem[]
+            {
+                new FieldItem { Field = Fields.Find(1)!, Item = Items.Find(1)!, Value = "1" },
+                new FieldItem { Field = Fields.Find(1)!, Item = Items.Find(2)!, Value = "2" },
+                new FieldItem { Field = Fields.Find(1)!, Item = Items.Find(3)!, Value = "3" },
+
+                new FieldItem { Field = Fields.Find(2)!, Item = Items.Find(1)!, Value = 1 },
+                new FieldItem { Field = Fields.Find(2)!, Item = Items.Find(2)!, Value = 2 },
+                new FieldItem { Field = Fields.Find(2)!, Item = Items.Find(3)!, Value = 3 },
+
+                new FieldItem { Field = Fields.Find(3)!, Item = Items.Find(1)!, Value = true },
+                new FieldItem { Field = Fields.Find(3)!, Item = Items.Find(2)!, Value = true },
+                new FieldItem { Field = Fields.Find(3)!, Item = Items.Find(3)!, Value = false }
+            };
+            FieldItems.AddRange(fi);
         }
 
         #region [Configuring entities]

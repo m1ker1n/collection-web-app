@@ -1,29 +1,21 @@
-﻿namespace CollectionWebApp.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CollectionWebApp.Models
 {
     public class FieldItem
     {
-        public enum ValueType
-        {
-            NumberType,
-            StringType,
-            TextType,
-            DateType,
-            BoolType
-        }
-
         public double? NumberValue { get; set; }
         public string? StringValue { get; set; }
         public string? TextValue { get; set; }
         public DateTime? DateValue { get; set; }
         public bool? BoolValue { get; set; }
 
-        public ValueType Type { get; set; }
-
         public object? Value 
         {
             get
             {
-                switch(Type)
+                if (Field == null) return null;
+                switch(Field.Type)
                 {
                     case ValueType.NumberType:
                         return NumberValue;
@@ -40,10 +32,11 @@
             }
             set
             {
-                switch (Type)
+                if (Field == null || value == null) return;
+                switch (Field.Type)
                 {
                     case ValueType.NumberType:
-                        NumberValue = (double?) value;
+                        NumberValue = (double?)(Convert.ToDouble(value));
                         break;
                     case ValueType.StringType:
                         StringValue = (string?) value;

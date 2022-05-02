@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public ValueType Type { get; set; }
 
         public int UserCollectionId { get; set; }
         public virtual UserCollection UserCollection { get; set; } = null!;
