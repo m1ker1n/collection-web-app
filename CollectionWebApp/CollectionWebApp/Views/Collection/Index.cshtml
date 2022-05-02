@@ -1,0 +1,68 @@
+﻿@model CollectionWebApp.ViewModels.CollectionIndexModel
+@{
+    ViewData["Title"] = "Collection Page";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <div class="container">
+        <img src="@Model.Collection.ImageUrl" alt="Collection image" style="width: 18rem;"/>
+        <p>@Model.Collection.Name</p>
+        <p>Theme: @Model.Collection.Theme.Name</p>
+        <p>@Model.Collection.Description</p>
+        <p><a asp-controller="Account" asp-action="Index" asp-route-id="@Model.Collection.User.Id">@Model.Collection.Name</a></p>
+        <p>Created: @Model.Collection.Created</p>
+    </div>
+    <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Tags</th>
+                            @foreach(var field in Model.Collection.Fields)
+                            {
+                                <th scope="col">@field.Name</th>
+                            }
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.Collection.Items)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    @foreach(var tag in item.Tags)
+                                    {
+                                        <a href="#" rel="@tag.Id">@tag.Name</a>
+                                    }
+                                </td>
+                                @foreach(var field in Model.Collection.Fields)
+                                {
+                                    <td>
+                                        @(item.FieldItems.FirstOrDefault(fi => fi.Field == field)?.Value)
+                                    </td>
+                                }
+                                <td>
+                                    <a asp-controller="Item" asp-action="Inspect" asp-route-id="@item.Id">Inspect</a>
+                                    @if(Model.ChangeAllowed)
+                                    {
+                                        <a asp-controller="Item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        <a asp-controller="Item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <tfoot>
+                            <td colspan="@(3+Model.Collection.Fields.Count)">
+                                <a asp-controller="Item" asp-action="Create" asp-route-userId="@Model.Collection.Id">Create</a>
+                            </td>
+                        </tfoot> 
+                    }
+                </table>
+            </div>
+</div>
