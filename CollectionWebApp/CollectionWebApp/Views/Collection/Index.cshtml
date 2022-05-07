@@ -11,8 +11,15 @@
         <p>@Model.Collection.Name</p>
         <p>Theme: @Model.Collection.Theme.Name</p>
         <p>@Model.Collection.Description</p>
-        <p><a asp-controller="Account" asp-action="Index" asp-route-id="@Model.Collection.User.Id">@Model.Collection.Name</a></p>
+        <p><a asp-controller="Account" asp-action="Index" asp-route-id="@Model.Collection.User.Id">@Model.Collection.User.Name</a></p>
         <p>Created: @Model.Collection.Created</p>
+        @if (Model.ChangeAllowed)
+        {
+            <p>
+                <a asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Collection.Id">Edit</a>
+                <a asp-controller="Collection" asp-action="Delete" asp-route-id="@Model.Collection.Id">Delete</a>
+            </p>
+        }
     </div>
     <div class="table-responsive">
                 <table class="table">
@@ -45,7 +52,7 @@
                                     </td>
                                 }
                                 <td>
-                                    <a asp-controller="Item" asp-action="Inspect" asp-route-id="@item.Id">Inspect</a>
+                                    <a asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Inspect</a>
                                     @if(Model.ChangeAllowed)
                                     {
                                         <a asp-controller="Item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>

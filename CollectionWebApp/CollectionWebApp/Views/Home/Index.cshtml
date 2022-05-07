@@ -25,7 +25,7 @@
                                     <h5 class="card-title">@item.Name</h5>
                                     <p class="card-text">
                                         <p>
-                                            Collection: <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@item.UserCollection.Id">@item.UserCollection.Name</a>
+                                            Collection: <a asp-controller="Collection" asp-action="Index" asp-route-id="@item.UserCollection.Id">@item.UserCollection.Name</a>
                                         </p>
                                         <!--Tags!!!!!!!-->
                                         @if (item.Tags.Count > 0)
@@ -42,7 +42,7 @@
                                             <p>No tags</p>
                                         }
                                     </p>
-                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Inspect" asp-route-id="@item.Id">View</a>
+                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">View</a>
                                 </div>
                             </div>
                         </div>

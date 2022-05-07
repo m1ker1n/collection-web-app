@@ -50,12 +50,12 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="@collection.ImageUrl" alt="collection image">
+                                    <img src="@collection.ImageUrl" alt="collection image" style="width: 18rem;">
                                 </td>
                                 <td>@collection.Name</td>
                                 <td>@collection.Description</td>
                                 <td>
-                                    <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@collection.Id">Inspect</a>
+                                    <a asp-controller="Collection" asp-action="Index" asp-route-id="@collection.Id">Inspect</a>
                                     @if(Model.ChangeAllowed)
                                     {
                                         <a asp-controller="Collection" asp-action="Edit" asp-route-id="@collection.Id">Edit</a>
