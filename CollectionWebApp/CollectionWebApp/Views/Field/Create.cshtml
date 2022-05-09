@@ -1,0 +1,21 @@
+﻿@model CollectionWebApp.ViewModels.FieldCreateModel
+@{
+    ViewData["Title"] = "Create field";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="validation" asp-validation-summary="All"></div>
+<form asp-action="Create" asp-controller="Field" asp-anti-forgery="true">
+    <input hidden asp-for="UserCollectionId" />
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input class="form-control" asp-for="Name">
+    </div>
+    <div class="form-group">
+        <label asp-for="Type">Type</label>
+        <select asp-for="Type" asp-items="Html.GetEnumSelectList<CollectionWebApp.Models.ValueType>()"></select>
+    </div>
+    <button class="btn btn-primary" type="submit" >Submit</button>
+    <a class="btn btn-secondary" asp-action="Index" asp-controller="Collection" asp-route-id="@Model.UserCollectionId">Cancel</a>
+</form>
