@@ -10,14 +10,16 @@
         <img src="@Model.Collection.ImageUrl" alt="Collection image" style="width: 18rem;"/>
         <p>@Model.Collection.Name</p>
         <p>Theme: @Model.Collection.Theme.Name</p>
-        <p>@Model.Collection.Description</p>
+        <p>Description: @Model.Collection.Description</p>
         <p><a asp-controller="Account" asp-action="Index" asp-route-id="@Model.Collection.User.Id">@Model.Collection.User.Name</a></p>
         <p>Created: @Model.Collection.Created</p>
         @if (Model.ChangeAllowed)
         {
             <p>
-                <a asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Collection.Id">Edit</a>
-                <a asp-controller="Collection" asp-action="Delete" asp-route-id="@Model.Collection.Id">Delete</a>
+                <a class="btn btn-secondary" asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Collection.Id">Edit</a>
+                <form asp-action="Delete" asp-controller="Collection" asp-route-id="@Model.Collection.Id" asp-anti-forgery="true">
+                    <input class="btn btn-danger" type="submit" value="Delete" />
+                </form>
             </p>
         }
     </div>
@@ -52,11 +54,13 @@
                                     </td>
                                 }
                                 <td>
-                                    <a asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Inspect</a>
+                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Inspect</a>
                                     @if(Model.ChangeAllowed)
                                     {
-                                        <a asp-controller="Item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                        <a asp-controller="Item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        <a class="btn btn-secondary" asp-controller="Item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        <form asp-action="Delete" asp-controller="Item" asp-route-id="@item.Id" asp-anti-forgery="true">
+                                            <input class="btn btn-danger" type="submit" value="Delete" />
+                                        </form>
                                     }
                                 </td>
                             </tr>
@@ -66,7 +70,7 @@
                     {
                         <tfoot>
                             <td colspan="@(3+Model.Collection.Fields.Count)">
-                                <a asp-controller="Item" asp-action="Create" asp-route-userId="@Model.Collection.Id">Create</a>
+                                <a class="btn btn-primary" asp-controller="Item" asp-action="Create" asp-route-userId="@Model.Collection.Id">Create</a>
                             </td>
                         </tfoot> 
                     }

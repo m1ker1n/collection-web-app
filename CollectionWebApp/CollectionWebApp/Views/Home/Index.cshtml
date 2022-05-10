@@ -42,7 +42,7 @@
                                             <p>No tags</p>
                                         }
                                     </p>
-                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">View</a>
+                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Inspect</a>
                                 </div>
                             </div>
                         </div>
@@ -83,6 +83,7 @@
                         <div class="p-2">Theme: @collection.Theme.Name</div>
                         <div class="p-2">Amount of items: @collection.Items.Count</div>
                         <div class="p-2">Description: @collection.Description</div>
+                        <div class="p-2"><a class="btn btn-primary" asp-action="Index" asp-controller="Collection" asp-route-id="@collection.Id">Inspect</a></div>
                     </div>
                 </li>
             }
