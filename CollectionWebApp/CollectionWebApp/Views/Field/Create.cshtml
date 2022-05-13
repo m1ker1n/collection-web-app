@@ -17,5 +17,5 @@
         <select asp-for="Type" asp-items="Html.GetEnumSelectList<CollectionWebApp.Models.ValueType>()"></select>
     </div>
     <button class="btn btn-primary p-2" type="submit" >Submit</button>
-    <a class="btn btn-secondary p-2" asp-action="Index" asp-controller="Collection" asp-route-id="@Model.UserCollectionId">Cancel</a>
+    <a class="btn btn-secondary p-2" asp-action="Edit" asp-controller="Collection" asp-route-id="@Model.UserCollectionId">Cancel</a>
 </form>
