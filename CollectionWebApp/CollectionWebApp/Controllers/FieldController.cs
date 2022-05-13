@@ -34,7 +34,7 @@ namespace CollectionWebApp.Controllers
             if (field == null) return NotFound();
             await db.Fields.AddAsync(field);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index", "Collection", new { id = collection!.Id });
+            return RedirectToAction("Edit", "Collection", new { id = field!.UserCollectionId });
         }
 
         private async Task<Field> CreateField(FieldCreateModel model)
@@ -71,7 +71,7 @@ namespace CollectionWebApp.Controllers
             var field = await db.Fields.FindAsync(model.Id);
             if (!ModelState.IsValid || !User.HasAccessTo(field?.UserCollection?.User, db)) return View(model);
             await EditField(field, model);
-            return RedirectToAction("Index", "Collection", new { id = field!.UserCollectionId});
+            return RedirectToAction("Edit", "Collection", new { id = field!.UserCollectionId});
         }
 
         private async Task EditField(Field field, FieldEditModel model)
@@ -100,7 +100,7 @@ namespace CollectionWebApp.Controllers
             if (field == null || !User.HasAccessTo(field.UserCollection.User, db)) return NotFound();
             db.Remove(field);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index", "Collection", new { id = field.UserCollectionId });
+            return RedirectToAction("Edit", "Collection", new { id = field!.UserCollectionId });
         }
     }
 }
