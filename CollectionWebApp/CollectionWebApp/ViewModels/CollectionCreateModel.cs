@@ -14,8 +14,6 @@ namespace CollectionWebApp.ViewModels
         public int ThemeId { get; set; }
         public ICollection<SelectListItem>? AvailableThemes { get; set; }
 
-        public string? ImageUrl { get; set; }
-
         [Required]
         public int UserId { get; set; }
    }

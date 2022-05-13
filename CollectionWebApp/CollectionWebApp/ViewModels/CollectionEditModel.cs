@@ -21,6 +21,8 @@ namespace CollectionWebApp.ViewModels
 
         public ICollection<Field>? Fields { get; set; }
 
+        public IFormFile? File { get; set; }
+
         [Required]
         public int UserId { get; set; }
     }

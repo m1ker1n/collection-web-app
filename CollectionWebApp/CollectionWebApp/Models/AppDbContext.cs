@@ -17,7 +17,6 @@ namespace CollectionWebApp.Models
 
         public readonly int UserRoleId = 1;
         public readonly int AdminRoleId = 2;
-        public readonly string ImagePlaceholder = "https://www.beddingwarehouse.com.au/wp-content/uploads/2016/01/placeholder-featured-image.png";
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -204,7 +203,7 @@ namespace CollectionWebApp.Models
 
             modelBuilder.Entity<UserCollection>()
                 .Property(u => u.ImageUrl)
-                .HasDefaultValue(ImagePlaceholder);
+                .HasDefaultValue(null);
         }
         #endregion
 

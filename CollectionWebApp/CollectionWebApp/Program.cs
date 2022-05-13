@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 using CollectionWebApp.Models;
+using CollectionWebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = new PathString("/Authorization/Login");
     });
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IImageStorage, CloudinaryStorage>();
 
 var app = builder.Build();
 

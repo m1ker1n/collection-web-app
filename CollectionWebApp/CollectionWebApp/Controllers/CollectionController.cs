@@ -4,16 +4,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CollectionWebApp.Models;
 using CollectionWebApp.ViewModels;
 using CollectionWebApp.Extensions;
+using CollectionWebApp.Services;
 
 namespace CollectionWebApp.Controllers
 {
     public class CollectionController : Controller
     {
         private AppDbContext db;
+        private IImageStorage storage;
 
-        public CollectionController(AppDbContext db)
+        public CollectionController(AppDbContext db, IImageStorage storage)
         {
             this.db = db;
+            this.storage = storage;
         }
 
         public async Task<IActionResult> Index(int? id)
@@ -74,7 +77,7 @@ namespace CollectionWebApp.Controllers
                 Name = model.Name!,
                 Description = model.Description,
                 Theme = theme,
-                ImageUrl = model.ImageUrl,
+                ImageUrl = storage.ImagePlaceholderUrl,
                 User = user
             };
             await db.UserCollections.AddAsync(collection);
@@ -130,6 +133,8 @@ namespace CollectionWebApp.Controllers
         {
             Theme theme = await db.Themes.FindAsync(model.ThemeId);
             UserCollection collection = await db.UserCollections.FindAsync(model.CollectionId);
+            if (model.File != null)
+                await UploadFile(model);
             if (collection == null) return null;
             collection.Name = model.Name;
             collection.Description = model.Description;
@@ -146,6 +151,13 @@ namespace CollectionWebApp.Controllers
             if (collection == null) return NotFound();
             db.UserCollections.Remove(collection);
             return RedirectToAction("Index", "Account", new { id = User.GetAppUser(db)!.Id });
+        }
+
+        private async Task UploadFile(CollectionEditModel model)
+        {
+            if (model.File == null) return;
+            var url = await storage.UploadFileAsync(model.File, model.File.FileName);
+            model.ImageUrl = url;
         }
     }
 }
