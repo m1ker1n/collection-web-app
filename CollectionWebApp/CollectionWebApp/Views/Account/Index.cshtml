@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="nav-collection" role="tabpanel" aria-labelledby="nav-collection-tab">
-            <div class="table-responsive">
+            <div class="table-responsive align-middle">
                 <table class="table">
                     <thead>
                         <tr>
@@ -50,16 +50,18 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="@collection.ImageUrl" alt="collection image">
+                                    <img src="@collection.ImageUrl" alt="collection image" style="width: 6rem;">
                                 </td>
                                 <td>@collection.Name</td>
                                 <td>@collection.Description</td>
                                 <td>
-                                    <a asp-controller="Collection" asp-action="Inspect" asp-route-id="@collection.Id">Inspect</a>
+                                    <a class="btn btn-primary" asp-controller="Collection" asp-action="Index" asp-route-id="@collection.Id">Inspect</a>
                                     @if(Model.ChangeAllowed)
                                     {
-                                        <a asp-controller="Collection" asp-action="Edit" asp-route-id="@collection.Id">Edit</a>
-                                        <a asp-controller="Collection" asp-action="Delete" asp-route-id="@collection.Id">Delete</a>
+                                        <a class="btn btn-secondary" asp-controller="Collection" asp-action="Edit" asp-route-id="@collection.Id">Edit</a>
+                                        <form asp-controller="Collection" asp-action="Delete" asp-route-id="@collection.Id" asp-anti-forgery="true">
+                                            <input class="btn btn-danger" type="submit" value="Delete" />
+                                        </form>
                                     }
                                 </td>
                             </tr>
@@ -69,7 +71,7 @@
                     {
                         <tfoot>
                             <td colspan="4">
-                                <a asp-controller="Collection" asp-action="Create" asp-route-userId="@Model.User.Id">Create</a>
+                                <a class="btn btn-primary" asp-controller="Collection" asp-action="Create" asp-route-id="@Model.User.Id">Create</a>
                             </td>
                         </tfoot> 
                     }

@@ -1,0 +1,79 @@
+﻿@model CollectionWebApp.ViewModels.CollectionIndexModel
+@{
+    ViewData["Title"] = "Collection Page";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <div class="container">
+        <img src="@Model.Collection.ImageUrl" alt="Collection image" style="width: 18rem;"/>
+        <p>@Model.Collection.Name</p>
+        <p>Theme: @Model.Collection.Theme.Name</p>
+        <p>Description: @Model.Collection.Description</p>
+        <p><a asp-controller="Account" asp-action="Index" asp-route-id="@Model.Collection.User.Id">@Model.Collection.User.Name</a></p>
+        <p>Created: @Model.Collection.Created</p>
+        @if (Model.ChangeAllowed)
+        {
+            <p>
+                <a class="btn btn-secondary" asp-controller="Collection" asp-action="Edit" asp-route-id="@Model.Collection.Id">Edit</a>
+                <form asp-action="Delete" asp-controller="Collection" asp-route-id="@Model.Collection.Id" asp-anti-forgery="true">
+                    <input class="btn btn-danger" type="submit" value="Delete" />
+                </form>
+            </p>
+        }
+    </div>
+    <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Tags</th>
+                            @foreach(var field in Model.Collection.Fields)
+                            {
+                                <th scope="col">@field.Name</th>
+                            }
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.Collection.Items)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    @foreach(var tag in item.Tags)
+                                    {
+                                        <a href="#" rel="@tag.Id">@tag.Name</a>
+                                    }
+                                </td>
+                                @foreach(var field in Model.Collection.Fields)
+                                {
+                                    <td>
+                                        @(item.FieldItems.FirstOrDefault(fi => fi.Field == field)?.Value)
+                                    </td>
+                                }
+                                <td>
+                                    <a class="btn btn-primary" asp-controller="Item" asp-action="Index" asp-route-id="@item.Id">Inspect</a>
+                                    @if(Model.ChangeAllowed)
+                                    {
+                                        <a class="btn btn-secondary" asp-controller="Item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        <form asp-action="Delete" asp-controller="Item" asp-route-id="@item.Id" asp-anti-forgery="true">
+                                            <input class="btn btn-danger" type="submit" value="Delete" />
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <tfoot>
+                            <td colspan="@(3+Model.Collection.Fields.Count)">
+                                <a class="btn btn-primary" asp-controller="Item" asp-action="Create" asp-route-userId="@Model.Collection.Id">Create</a>
+                            </td>
+                        </tfoot> 
+                    }
+                </table>
+            </div>
+</div>

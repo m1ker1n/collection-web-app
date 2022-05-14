@@ -1,0 +1,25 @@
+﻿@model CollectionWebApp.ViewModels.CollectionCreateModel
+@{
+    ViewData["Title"] = "Create collection";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="validation" asp-validation-summary="All"></div>
+<form asp-action="Create" asp-controller="Collection" asp-anti-forgery="true">
+    <input hidden asp-for="UserId" />
+    <div class="form-group p-2">
+        <label asp-for="Name">Name</label>
+        <input class="form-control" asp-for="Name">
+    </div>
+    <div class="form-group p-2">
+        <label asp-for="Description">Description</label>
+        <textarea type="text" class="form-control" asp-for="Description"></textarea>
+    </div>
+    <div class="form-group p-2">
+        <label asp-for="ThemeId">Theme</label>
+        <select asp-for="ThemeId" asp-items="Model.AvailableThemes"></select>
+    </div>
+    <button class="btn btn-primary p-2" type="submit">Submit</button>
+    <a class="btn btn-secondary p-2" asp-action="Index" asp-controller="Account" asp-route-id="@Model.UserId">Cancel</a>
+</form>
