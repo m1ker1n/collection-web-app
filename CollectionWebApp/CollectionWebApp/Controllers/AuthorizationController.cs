@@ -88,7 +88,7 @@ namespace CollectionWebApp.Controllers
 
         private async Task<User?> RegisterUserAsync(RegisterModel model)
         {
-            Role? userRole = await db.Roles.FindAsync(db.UserRoleId);
+            Role? userRole = await db.Roles.FindAsync(Constants.UserRoleId);
             if (userRole == null) return null;
             User? user = new User
             {

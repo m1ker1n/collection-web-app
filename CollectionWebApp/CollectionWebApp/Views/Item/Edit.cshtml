@@ -1,0 +1,106 @@
+﻿@model CollectionWebApp.ViewModels.ItemEditModel
+@{
+    ViewData["Title"] = "Edit item";
+}
+
+@section Head
+{
+
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="validation" asp-validation-summary="All"></div>
+<form asp-action="Edit" asp-controller="Item" asp-anti-forgery="true" id="form">
+    <input hidden asp-for="ItemId" />
+    <input hidden asp-for="UserCollectionId" />
+    <div class="form-group p-2">
+        <label asp-for="Name">Name</label>
+        <input class="form-control" asp-for="Name">
+    </div>
+    <div class="form-group p-2">
+        <label asp-for="FieldItems">Fields</label>
+        @Html.EditorFor(m => m.FieldItems)
+    </div>
+    <div class="form-group p-2">
+        <label>Tags</label>
+        <select class="form-control" multiple="multiple" id="select2">
+
+        </select>
+        <input class="btn btn-secondary p-2 my-2" id="saveTagsBtn" value="Save">
+        <div id="ajaxResult" class="text-muted p-2 my-2"></div>
+    </div>
+    <button class="btn btn-primary p-2" type="submit">Submit</button>
+    <a class="btn btn-secondary p-2" asp-action="Index" asp-controller="Collection" asp-route-id="@Model.UserCollectionId">Cancel</a>
+</form>
+
+@section Scripts
+{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#select2').select2({
+                tags: true,
+                ajax: {
+                    type: 'GET',
+                    url: '/Tag/Search',
+                    processResults: function(data){
+                        return {
+                            results: $.map(data, function(item){
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                }
+            });
+
+            var select = $('#select2');
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetItemTags","Tag", new { id = Model.ItemId })'
+            }).then(function (data) {
+                //create the option and append to Select2
+                data.forEach(function(item){
+                    var option = new Option(item.name, item.tagId, true, true);
+                    select.append(option).trigger('change');
+                });
+
+                select.trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: data
+                    }
+                });
+            });
+
+            $('#saveTagsBtn').click(function(event){
+                var data = select.select2('data');
+                var objects = data.map(function(item){
+                    return {
+                        'Name': item.text,
+                        'Id': item.id === item.text ? 0 : item.Id
+                    }
+                });
+                var tags = {
+                    'Tags': objects,
+                    'ItemId': @Model.ItemId 
+                }
+
+                $.ajax({
+                    url: '@Url.Action("PostItemTags","Tag")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(tags),
+                    success: function (result) {
+                        $('#ajaxResult').text(result ? 'Saved successfully' : 'Not saved');
+                    }
+                });
+            });
+        });
+    </script>
+}

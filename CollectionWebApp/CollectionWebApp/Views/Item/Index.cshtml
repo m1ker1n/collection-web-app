@@ -1,0 +1,172 @@
+﻿@model CollectionWebApp.ViewModels.ItemIndexModel
+
+@section Head{
+    <!--Bootstrap Icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+}
+
+@{
+    ViewData["Title"] = "Item Page";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-center">
+    <div class="d-flex">
+        <div class="d-flex flex-fill justify-content-center">
+            <div class="card flex-fill" >
+                <img src="@Model.Item.UserCollection.ImageUrl" class="align-self-center img-thumbnail p-2 m-2" alt="collection-image" style="width: 18em;">
+                <div class="card-body">
+                    <div class="item-data">
+                        <h5 class="card-title">@Model.Item.Name</h5>
+                        <p class="card-text">
+                            <p class="collection-data">
+                                Collection: <a asp-controller="Collection" asp-action="Index" asp-route-id="@Model.Item.UserCollection.Id">@Model.Item.UserCollection.Name</a>
+                            </p>
+                            @if (Model.Item.Tags.Count > 0)
+                            {
+                                <p class="tags">Tags: 
+                                    @foreach(var tag in Model.Item.Tags)
+                                    {
+                                        <a href="#">@tag.Name</a>       
+                                    }
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="tags">No tags</p>
+                            }
+                            <p class="fields">
+                                @foreach(var field in Model.Item.UserCollection.Fields)
+                                {
+                                    <p class="field">
+                                        @field.Name: 
+                                        <p class="field-value">
+                                            @field.FieldItems.FirstOrDefault(fi => fi.Item == Model.Item)?.Value
+                                        </p>
+                                    </p>
+                                }
+                            </p>
+                        </p>
+                    </div>
+                    @if (Model.ChangeAllowed)
+                    {
+                        <div class="item-controls d-inline-flex">
+                            <a class="btn btn-secondary" asp-controller="Item" asp-action="Edit" asp-route-id="@Model.Item.Id">Edit</a>
+                            <form asp-action="Delete" asp-controller="Item" asp-route-id="@Model.Item.Id" asp-anti-forgery="true">
+                                <input class="btn btn-danger" type="submit" value="Delete" />
+                            </form>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <div class="likes d-flex" style="font-size: 2em;">
+                        <button class="flex-fill" id="likeBtn" style="border: none; background: none;"  disabled="@(Model.User == null ? "disabled" : null)">                       
+                            <div class="text-muted">
+                                <div id="likeCounter"></div>
+                                <i id="likeIcon" class="bi-heart" style="color: red"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <br />
+
+    <ul class="commentaries list-group">
+        <li class="list-group-item">
+            Commentaries: @Model.Item.Commentaries.Count
+        </li>
+        @{
+            var comments = Model.Item.Commentaries.OrderBy(c => c.Created);
+        }
+        @foreach(var comment in comments)
+        {
+            <li class="list-group-item commentary d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <a class="fw-bold" asp-controller="Account" asp-action="Index" asp-route-id="@comment.User.Id">
+                        @comment.User.Name
+                    </a>
+                    @comment.Text
+                </div>                
+            </li>
+        }
+        @if(User.Identity.IsAuthenticated)
+        {
+            <li class="list-group-item commentary-write">
+                <form method="post" id="writeCommentForm" asp-anti-forgery="true">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="userNameInput" disabled value="@Model.User!.Name>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="commentTextInput" placeholder="Write your comment here"></textarea>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Submit" formtarget="writeCommentForm" id="writeCommentFormSubmitBtn">
+                </form>
+            </li>
+        }
+    </ul>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('document').ready(function(){
+            function getLikesAmount(){
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetLikeAmount","Like", new {id = Model.Item.Id})',
+                    success: function(result) {
+                        console.log(result);
+                        $('#likeCounter').text(result);
+                    }
+                });
+            };
+
+            function getIsLiked(){
+                var data = {
+                    UserId: @(Model.User?.Id ?? 0),
+                    ItemId: @Model.Item.Id
+                };
+                $.ajax({
+                    url: '@Url.Action("IsLiked","Like")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        console.log(result);
+                        $('#likeIcon').attr('class', result ? 'bi-heart-fill' : 'bi-heart');
+                    }
+                });
+            };
+
+            function like(){
+                var data = {
+                    UserId: @(Model.User?.Id ?? 0),
+                    ItemId: @Model.Item.Id
+                };   
+
+                $.ajax({
+                    url: '@Url.Action("Like","Like")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function(result){
+                        console.log(result);
+                        getLikesAmount();
+                        getIsLiked();
+                    }
+                });
+            };
+
+            getLikesAmount();
+            getIsLiked();
+            $('#likeBtn').click(function(){
+                like();
+            });
+        });
+    </script>
+}

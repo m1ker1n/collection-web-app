@@ -1,6 +1,6 @@
 ﻿@model CollectionWebApp.Models.Field
 
-<div class="field-item rounded-1 border p-2 m-2">
+<div class="field-item rounded-1 border py-2 m-2">
     <p>Name: @Html.DisplayFor(m => m.Name)</p>
     <p>Type: @Html.DisplayFor(m => m.Type)</p>
     <a class="btn btn-secondary" asp-action="Edit" asp-controller="Field" asp-route-id="@Model.Id">Edit</a>

@@ -1,0 +1,27 @@
+﻿@model CollectionWebApp.ViewModels.FieldItemModel
+@using CollectionWebApp.Models
+
+<div class="fieldItem rounded-1 border p-2 my-2">
+    @Html.HiddenFor(m => m.ItemId)
+    @Html.HiddenFor(m => m.FieldId)
+    @Html.HiddenFor(m => m.FieldName)
+    <label>@Model.FieldName</label>
+    @switch(Model.Type)
+    {
+        case CollectionWebApp.Models.ValueType.BoolType:
+            @Html.CheckBoxFor(m => m.BoolValue)
+            break;
+        case CollectionWebApp.Models.ValueType.DateType:
+            @Html.EditorFor(m => m.DateValue)
+            break;
+        case CollectionWebApp.Models.ValueType.NumberType:
+            @Html.EditorFor(m => m.NumberValue)
+            break;
+        case CollectionWebApp.Models.ValueType.StringType:
+            @Html.EditorFor(m => m.StringValue)
+            break;
+        case CollectionWebApp.Models.ValueType.TextType:
+            @Html.TextAreaFor(m => m.TextValue)
+            break;
+    }
+</div>

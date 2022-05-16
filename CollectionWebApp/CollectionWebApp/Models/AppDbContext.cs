@@ -10,19 +10,17 @@ namespace CollectionWebApp.Models
         public DbSet<Theme> Themes { get; set; } = null!;
         public DbSet<Item> Items { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
+        public DbSet<TagItem> TagItems { get; set; } = null!;
         public DbSet<Field> Fields { get; set; } = null!;
         public DbSet<FieldItem> FieldItems { get; set; } = null!;
         public DbSet<Like> Likes { get; set; } = null!;
         public DbSet<Commentary> Commentaries { get; set; } = null!;
 
-        public readonly int UserRoleId = 1;
-        public readonly int AdminRoleId = 2;
-
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
             //TestAfterModelCreated();
         }
 
@@ -47,8 +45,8 @@ namespace CollectionWebApp.Models
             modelBuilder.Entity<Role>()
                 .HasData(new Role[]
                 { 
-                    new Role { Id = UserRoleId, Name = "User" },
-                    new Role { Id = AdminRoleId, Name = "Admin" }
+                    new Role { Id = Constants.UserRoleId, Name = Constants.UserRole },
+                    new Role { Id = Constants.AdminRoleId, Name = Constants.AdminRole }
                 });
         }
 
@@ -304,7 +302,7 @@ namespace CollectionWebApp.Models
                         .OnDelete(DeleteBehavior.Restrict),
                     j =>
                     {
-                        j.HasKey(t => new { t.ItemId, t.TagId});
+                        j.HasKey(t => new { t.TagId, t.ItemId});
                     }
                 );
         }
@@ -327,7 +325,7 @@ namespace CollectionWebApp.Models
                         .OnDelete(DeleteBehavior.Restrict),
                     j =>
                     {
-                        j.HasKey(t => new { t.ItemId, t.FieldId });
+                        j.HasKey(t => new { t.FieldId, t.ItemId });
                     }
                 ) ;
         }
