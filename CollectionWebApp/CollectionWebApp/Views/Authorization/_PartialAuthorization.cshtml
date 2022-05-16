@@ -1,0 +1,28 @@
+﻿@using CollectionWebApp.Models
+
+@if(User.Identity.IsAuthenticated)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
+    </li>
+
+    @if(User.IsInRole(Constants.AdminRole))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="AdminPanel" asp-action="Index">Admin Panel</a>
+        </li>
+    }
+
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Authorization" asp-action="Logout">Log Out</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Authorization" asp-action="Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Authorization" asp-action="Login">Log In</a>
+    </li>
+}

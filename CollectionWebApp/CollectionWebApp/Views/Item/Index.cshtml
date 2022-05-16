@@ -98,7 +98,7 @@
             <li class="list-group-item commentary-write">
                 <form method="post" id="writeCommentForm" asp-anti-forgery="true">
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="userNameInput" disabled value="@Model.User!.Name>
+                        <input type="text" class="form-control" id="userNameInput" disabled value="@Model.User!.Name" />
                     </div>
                     <div class="mb-3">
                         <textarea class="form-control" id="commentTextInput" placeholder="Write your comment here"></textarea>
@@ -162,8 +162,11 @@
                 });
             };
 
-            getLikesAmount();
-            getIsLiked();
+            setInterval(function(){
+                getLikesAmount();
+                getIsLiked();
+            },1500);
+
             $('#likeBtn').click(function(){
                 like();
             });
